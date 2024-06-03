@@ -33,9 +33,13 @@ class GitLabVariables(GitLabProjects):
             variable_in_config,
         )
 
-    def delete_variable(self, project_and_group_name, variable_in_config):
+    def delete_variable(self, project_and_group_name, variable_in_config, environment_scope="*"):
+        if environment_scope == "*":
+            url = "projects/%s/variables/%s"
+        else:
+            url = f"projects/%s/variables/%s?filter[environment_scope]={environment_scope}"
         self._make_requests_to_api(
-            "projects/%s/variables/%s",
+            url,
             (project_and_group_name, variable_in_config["key"]),
             method="DELETE",
             expected_codes=[204, 404],
