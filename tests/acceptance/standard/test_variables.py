@@ -163,6 +163,7 @@ class TestVariables:
                 key: FOO
                 value: 123
                 environment_scope: test/ee
+                filter[environment_scope]: test/ee
         """
 
         run_gitlabform(config_single_variable, project)
@@ -198,10 +199,12 @@ class TestVariables:
                 key: FOO2
                 value: alfa
                 environment_scope: test/ee
+                filter[environment_scope]: test/ee
               foo_lv:
                 key: FOO2
                 value: beta
                 environment_scope: test/lv
+                filter[environment_scope]: test/lv
         """
 
         run_gitlabform(config_more_variables, project)
