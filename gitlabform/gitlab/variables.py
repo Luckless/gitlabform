@@ -33,11 +33,11 @@ class GitLabVariables(GitLabProjects):
             variable_in_config,
         )
 
-    def delete_variable(self, project_and_group_name, variable_in_config, environment_scope="*"):
-        if environment_scope == "*":
-            url = "projects/%s/variables/%s"
+    def delete_variable(self, project_and_group_name, variable_in_config):
+        if variable_in_config["environment_scope"] && variable_in_config["environment_scope"] != "*":
+            url = f"projects/%s/variables/%s?filter[environment_scope]={variable_in_config[\"environment_scope\"]}"
         else:
-            url = f"projects/%s/variables/%s?filter[environment_scope]={environment_scope}"
+            url = "projects/%s/variables/%s"
         self._make_requests_to_api(
             url,
             (project_and_group_name, variable_in_config["key"]),
