@@ -152,6 +152,41 @@ class TestVariables:
         )
         assert variable.value == "alfa"
 
+    def test__delete_variable_with_env_scope(self, project):
+        config_single_variable = f"""
+        projects_and_groups:
+          {project.path_with_namespace}:
+            project_settings:
+              builds_access_level: enabled
+            variables:
+              foo:
+                key: FOO
+                value: 123
+                environment_scope: test/ee
+        """
+
+        run_gitlabform(config_single_variable, project)
+
+        variable = project.variables.get("FOO", filter={"environment_scope": "test/ee"})
+        assert variable.value == "123"
+
+        config_delete_variable = f"""
+        projects_and_groups:
+          {project.path_with_namespace}:
+            project_settings:
+              builds_access_level: enabled
+            variables:
+              foo:
+                key: FOO
+                value: 123
+                delete: true
+        """
+
+        run_gitlabform(config_delete_variable, project)
+
+        with pytest.raises(GitlabGetError):
+            project.variables.get("FOO")
+
     def test__variables_with_env_scope(self, project):
         config_more_variables = f"""
         projects_and_groups:
